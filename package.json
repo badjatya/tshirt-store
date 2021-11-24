@@ -1,0 +1,19 @@
+{
+  "name": "tshirt-store",
+  "version": "1.0.0",
+  "description": "A backend REST API's project for a tshirt store",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https"
+  },
+  "keywords": [
+    "NodeJs",
+    "ExpressJS"
+  ],
+  "author": "Archit Badjatya",
+  "license": "ISC"
+}
