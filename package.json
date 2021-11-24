@@ -4,11 +4,12 @@
   "description": "A backend REST API's project for a tshirt store",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index",
+    "dev": "nodemon index"
   },
   "repository": {
     "type": "git",
-    "url": "https"
+    "url": "https://github.com/badjatya/tshirt-store.git"
   },
   "keywords": [
     "NodeJs",
