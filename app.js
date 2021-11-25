@@ -21,5 +21,8 @@ app.use(cookieParser());
 app.use(fileUpload());
 app.use(morgan("tiny"));
 
+// ** Routes
+app.use("/api/v1", require("./routes/home"));
+
 // Exporting app
 module.exports = app;
