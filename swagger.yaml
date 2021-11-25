@@ -1,0 +1,60 @@
+openapi: "3.0.0"
+info:
+  title: T-Shirt Store API
+  description: A Collection of REST API for the T-Shirt Store
+  version: 1.0.1
+  contact:
+    url: "https://badjatya.github.io"
+    email: architj240@gmail.com
+
+servers:
+  - url: "{protocol}://localhost:{port}/api/{version}"
+    description: A local host server of the API
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      port:
+        enum:
+          - 5000
+          - 8000
+          - 4000
+        default: 5000
+      version:
+        enum:
+          - v1
+          - v2
+        default: v1
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+paths:
+  /dummy:
+    get:
+      tags:
+        - Home
+      summary: A basic home route for greeting
+      responses:
+        200:
+          description: All good success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  greeting:
+                    type: string
+                  dummy:
+                    type: boolean
