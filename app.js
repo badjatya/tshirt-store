@@ -23,6 +23,7 @@ app.use(morgan("tiny"));
 
 // ** Routes
 app.use("/api/v1", require("./routes/home"));
+app.use("/api/v1/users", require("./routes/user"));
 
 // Exporting app
 module.exports = app;
