@@ -58,3 +58,5 @@ paths:
                     type: string
                   dummy:
                     type: boolean
+        500:
+          description: Internal server error
