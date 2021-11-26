@@ -8,6 +8,9 @@ const cookieToken = (user, res) => {
     httpOnly: true,
   };
 
+  // Hiding password
+  user.password = undefined;
+
   res.status(201).cookie("token", token, cookieOptions).json({
     status: "success",
     token,

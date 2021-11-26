@@ -26,11 +26,9 @@ const userSchema = new mongoose.Schema({
   photo: {
     id: {
       type: String,
-      required: true,
     },
     secureUrl: {
       type: String,
-      required: true,
     },
   },
   role: {
