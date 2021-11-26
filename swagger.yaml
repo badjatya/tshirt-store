@@ -60,3 +60,72 @@ paths:
                     type: boolean
         500:
           description: Internal server error
+
+  /users/signup:
+    post:
+      tags:
+        - Users
+      summary: creates a new user, required name, email, password and photo
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+                - photo
+              properties:
+                name:
+                  type: string
+                  description: The name must be less than 40 characters
+                email:
+                  type: string
+                  description: The email must be unique
+                password:
+                  type: string
+                  description: The password must be of 6 characters
+                photo:
+                  in: formData
+                  description: The uploaded file data
+                  type: file
+                  format: binary
+      responses:
+        201:
+          description: success, user signup's
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      photo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          secureUrl:
+                            type: string
+                      createdAt:
+                        type: string
+                      __v:
+                        type: string
+        400:
+          description: bad request, something went wrong please check all the fields
+        500:
+          description: Internal server error
