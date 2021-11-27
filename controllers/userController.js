@@ -5,6 +5,7 @@ const User = require("../models/user");
 const BigPromise = require("../middlewares/bigPromise");
 const CustomError = require("../utils/customError");
 const cookieToken = require("../utils/cookieToken");
+const emailHelper = require("../utils/emailHelper");
 
 // Lib
 const cloudinary = require("cloudinary");
@@ -81,4 +82,46 @@ exports.logout = BigPromise(async (req, res, next) => {
     status: "success",
     message: "User successfully logout",
   });
+});
+
+exports.forgotPassword = BigPromise(async (req, res, next) => {
+  const { email } = req.body;
+  if (!email) {
+    return next("Email is required", 400);
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return next("User not found, try another email", 404);
+  }
+
+  const forgotToken = user.getForgotPasswordToken();
+
+  // Save to DB
+  await user.save({ validateBeforeSave: false });
+
+  const myUrl = `${req.protocol}://${req.get(
+    "host"
+  )}/api/v1/users/password/reset/${forgotToken}`;
+  const message = `Copy paste this link in your URL and hit enter \n\n ${myUrl}`;
+
+  try {
+    emailHelper({
+      email,
+      subject: `T-Shirt Store, ${user.name} reset password`,
+      message,
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "Email sent successfully",
+    });
+  } catch (error) {
+    user.forgotPasswordToken = undefined;
+    user.forgotPasswordTokenExpiry = undefined;
+    await user.save({ validateBeforeSave: false });
+    return next(
+      new CustomError("Email not sent, please try again after sometime", 500)
+    );
+  }
 });
