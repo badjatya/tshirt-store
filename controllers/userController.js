@@ -161,3 +161,70 @@ exports.resetPassword = BigPromise(async (req, res, next) => {
   // Two options 1) send user token or redirect them to login page
   cookieToken(user, res);
 });
+
+exports.getLoggedInUserDetails = BigPromise(async (req, res, next) => {
+  req.user.password = undefined;
+  res.status(200).json({
+    status: "success",
+    user: req.user,
+  });
+});
+
+exports.updatePassword = BigPromise(async (req, res, next) => {
+  const { password, oldPassword } = req.body;
+
+  if (!password && !oldPassword) {
+    return next(new CustomError("oldPassword and password is required", 400));
+  }
+
+  const isOldPassword = req.user.isValidatedPassword(oldPassword);
+
+  if (!isOldPassword) {
+    return next(new CustomError("oldPassword does not match", 400));
+  }
+
+  // Setting new password
+  req.user.password = password;
+  await req.user.save();
+
+  cookieToken(req.user, res);
+});
+
+exports.updateProfile = BigPromise(async (req, res, next) => {
+  const { name, email } = req.body;
+
+  const newData = {
+    name: name || req.user.name,
+    email: email || req.user.email,
+  };
+
+  if (req.files) {
+    // Deleting the existing photo from the database
+    await cloudinary.v2.uploader.destroy(req.user.photo.id);
+
+    // Uploading new image
+    const file = req.files.photo;
+    const result = await cloudinary.v2.uploader.upload(file.tempFilePath, {
+      folder: "lco/t-shirtStore/users",
+      width: 150,
+      crop: "scale",
+    });
+
+    newData.photo = {
+      id: result.public_id,
+      secureUrl: result.secure_url,
+    };
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(req.user._id, newData, {
+    new: true,
+    runValidators: true,
+  });
+
+  updatedUser.password = undefined;
+
+  res.status(200).json({
+    status: "success",
+    user: updatedUser,
+  });
+});
