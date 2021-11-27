@@ -9,6 +9,7 @@ const emailHelper = require("../utils/emailHelper");
 
 // Lib
 const cloudinary = require("cloudinary");
+const crypto = require("crypto");
 
 exports.signup = BigPromise(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -124,4 +125,39 @@ exports.forgotPassword = BigPromise(async (req, res, next) => {
       new CustomError("Email not sent, please try again after sometime", 500)
     );
   }
+});
+
+exports.resetPassword = BigPromise(async (req, res, next) => {
+  const token = req.params.token;
+
+  const encryptedToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    forgotPasswordToken: encryptedToken,
+    forgotPasswordTokenExpiry: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    new CustomError("token is invalid or expired", 401);
+  }
+
+  const { password, confirmPassword } = req.body;
+
+  if (password !== confirmPassword) {
+    return next(
+      new CustomError("password and confirmPassword does not match", 400)
+    );
+  }
+
+  user.password = password;
+  user.forgotPasswordToken = undefined;
+  user.forgotPasswordTokenExpiry = undefined;
+
+  await user.save();
+
+  // Two options 1) send user token or redirect them to login page
+  cookieToken(user, res);
 });
