@@ -134,7 +134,7 @@ paths:
     post:
       tags:
         - User
-      summary: logins an existing user, required email and password
+      summary: login a new user. required files are -  email and password. Also adds httpOnly cookie in browser. It sends token in response too.
       consumes: application/json
       produces: application/json
       requestBody:
@@ -192,3 +192,476 @@ paths:
           description: email or password are incorrect or does not exist
         500:
           description: internal server error, please try after some time
+
+  /users/logout:
+    get:
+      tags:
+        - User
+      summary: logout an logged in user
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+            default: token
+      responses:
+        200:
+          description: User successfully logged out, returns an object and also removes httpOnly cookies, in mobile send header Authorization token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+        500:
+          description: internal server error, please try after some time
+
+  /users/forgot-password:
+    post:
+      tags:
+        - User
+      summary: sends an email with link to forgot password. Contains the token for user validation. Public hosted version will not send email to your account. Use your own SMTP details to access this feature on local project
+      consumes: application/json
+      produces: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  example: two@dev.com
+      responses:
+        200:
+          description: all good, an email will be sent at email
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+        400:
+          description: email is required
+        404:
+          description: user not found
+        500:
+          description: internal server error, please try again after sometime
+
+  /users/password/reset/{token}:
+    post:
+      tags:
+        - User
+      summary: Allows user to reset password, validated based on token. send password and confirm password fields
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+                - confirmPassword
+              properties:
+                password:
+                  type: string
+                confirmPassword:
+                  type: string
+      responses:
+        201:
+          description: password updated, returns user object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      photo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          secureUrl:
+                            type: string
+                      createdAt:
+                        type: string
+                      __v:
+                        type: string
+        400:
+          description: password and confirmPassword does not match
+        401:
+          description: token is invalid or expired
+        500:
+          description: Internal server error, please try again after some time
+
+  /users/profile:
+    get:
+      tags:
+        - User
+      summary: Gets all details about logged in user. Send token in cookies as named token or send Bearer Auth
+      responses:
+        200:
+          description: success, returns an object with user details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      photo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          secureUrl:
+                            type: string
+                      createdAt:
+                        type: string
+                      __v:
+                        type: string
+        400:
+          description: Bad request
+        500:
+          description: internal server error
+
+  /users/password/update:
+    patch:
+      tags:
+        - User
+      summary: User can update the password if he is logged in. Send oldPassword and password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - oldPassword
+                - password
+              properties:
+                oldPassword:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: password updated returns user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      photo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          secureUrl:
+                            type: string
+                      createdAt:
+                        type: string
+                      __v:
+                        type: string
+        400:
+          description: oldPassword and password is required
+        401:
+          description: oldPassword does not match
+        500:
+          description: internal server error, please try again after sometime
+
+  /users/profile/update:
+    patch:
+      tags:
+        - User
+      summary: User can update the name, emails and photo
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                photo:
+                  in: formData
+                  description: The uploaded file data
+                  type: file
+                  format: binary
+      responses:
+        201:
+          description: Updated user details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      photo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          secureUrl:
+                            type: string
+                      createdAt:
+                        type: string
+                      __v:
+                        type: string
+        400:
+          description: bad request
+        500:
+          description: internal server error
+
+  /admin/users:
+    get:
+      tags:
+        - Admin
+      summary: returns an array of users but only admin can access
+      responses:
+        200:
+          description: returns an array of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  results:
+                    type: number
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                        name:
+                          type: string
+                        email:
+                          type: string
+                        role:
+                          type: string
+                        photo:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            secureUrl:
+                              type: string
+                        createdAt:
+                          type: string
+                        __v:
+                          type: string
+
+  /admin/users/{id}:
+    get:
+      tags:
+        - Admin
+      summary: If user is admin, response will get details of a single user based on the user id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          default: 61a33e97a651fadf42b2fc8a
+          schema:
+            type: string
+      responses:
+        200:
+          description: returns the user object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      photo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          secureUrl:
+                            type: string
+                      createdAt:
+                        type: string
+                      __v:
+                        type: string
+        400:
+          description: bad request
+        500:
+          description: internal server error
+
+          /admin/users/{id}:
+    patch:
+      tags:
+        - Admin
+      summary: If user is admin, he can update name, email and role of user based on the id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          default: 61a33e97a651fadf42b2fc8a
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                role:
+                  type: string
+      responses:
+        200:
+          description: returns the updated user object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      photo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          secureUrl:
+                            type: string
+                      createdAt:
+                        type: string
+                      __v:
+                        type: string
+        400:
+          description: bad request
+        500:
+          description: internal server error
+    delete:
+      tags:
+        - Admin
+      summary: If user is admin, he can delete the user based on user id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          default: 61a33e97a651fadf42b2fc8a
+          schema:
+            type: string
+      responses:
+        200:
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+        400:
+          description: bad request
+        500:
+          description: internal server error

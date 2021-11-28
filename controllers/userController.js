@@ -180,7 +180,7 @@ exports.updatePassword = BigPromise(async (req, res, next) => {
   const isOldPassword = req.user.isValidatedPassword(oldPassword);
 
   if (!isOldPassword) {
-    return next(new CustomError("oldPassword does not match", 400));
+    return next(new CustomError("oldPassword does not match", 401));
   }
 
   // Setting new password
