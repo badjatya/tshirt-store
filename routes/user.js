@@ -10,6 +10,7 @@ const {
   getLoggedInUserDetails,
   updatePassword,
   updateProfile,
+  adminAllUsers,
 } = require("../controllers/userController");
 
 // Middleware
