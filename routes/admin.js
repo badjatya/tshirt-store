@@ -4,8 +4,8 @@ const router = require("express").Router();
 const { adminAllUsers } = require("../controllers/adminController");
 
 // Middleware
-const { isLoggedIn } = require("../middlewares/user");
+const { isLoggedIn, customRole } = require("../middlewares/user");
 
-router.route("/users").get(isLoggedIn, adminAllUsers);
+router.route("/users").get(isLoggedIn, customRole("admin"), adminAllUsers);
 
 module.exports = router;
