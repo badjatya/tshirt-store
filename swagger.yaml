@@ -583,23 +583,26 @@ paths:
       summary: If user is admin, he can update name, email and role of user based on the id
       parameters:
         - name: id
-          required: true
           in: path
-          default: 61a33e97a651fadf42b2fc8a
+          required: true
           schema:
             type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
-                role:
-                  type: string
+        - name: name
+          in: formData
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: formData
+          required: true
+          schema:
+            type: string
+        - name: role
+          in: formData
+          required: true
+          schema:
+            type: string
+            enum: [user, admin, manager]
       responses:
         200:
           description: returns the updated user object
