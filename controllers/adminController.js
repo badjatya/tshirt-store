@@ -23,3 +23,27 @@ exports.singleUser = BigPromise(async (req, res, next) => {
     user,
   });
 });
+
+exports.updateSingleUser = BigPromise(async (req, res, next) => {
+  const { name, email, role } = req.body;
+
+  const user = await User.findById(req.params.id);
+
+  const newData = {
+    name: name || user.name,
+    email: email || user.email,
+    role: role || user.role,
+  };
+
+  const updatedUser = await User.findByIdAndUpdate(req.params.id, newData, {
+    new: true,
+    runValidators: true,
+  });
+
+  updatedUser.password = undefined;
+
+  res.status(200).json({
+    status: "success",
+    user: updatedUser,
+  });
+});
