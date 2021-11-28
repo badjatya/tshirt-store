@@ -64,7 +64,7 @@ paths:
   /users/signup:
     post:
       tags:
-        - Users
+        - User
       summary: creates a new user, required name, email, password and photo
       requestBody:
         content:
@@ -129,3 +129,66 @@ paths:
           description: bad request, something went wrong please check all the fields
         500:
           description: Internal server error
+
+  /users/login:
+    post:
+      tags:
+        - User
+      summary: logins an existing user, required email and password
+      consumes: application/json
+      produces: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  example: "one@dev.com"
+                password:
+                  type: string
+                  example: "123456"
+      responses:
+        201:
+          description: User successfully logged in, returns user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      photo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          secureUrl:
+                            type: string
+                      createdAt:
+                        type: string
+                      __v:
+                        type: string
+        400:
+          description: email and password are required
+        401:
+          description: email or password are incorrect or does not exist
+        500:
+          description: internal server error, please try after some time

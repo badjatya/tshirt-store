@@ -56,7 +56,7 @@ exports.login = BigPromise(async (req, res, next) => {
   // If user not found
   if (!user) {
     return next(
-      CustomError("Email or Password are incorrect or does not exists", 400)
+      CustomError("Email or Password are incorrect or does not exists", 401)
     );
   }
 
@@ -64,7 +64,7 @@ exports.login = BigPromise(async (req, res, next) => {
   const isPasswordCorrect = await user.isValidatedPassword(password);
   if (!isPasswordCorrect) {
     return next(
-      CustomError("Email or Password are incorrect or does not exists", 400)
+      CustomError("Email or Password are incorrect or does not exists", 401)
     );
   }
 
