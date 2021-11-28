@@ -5,6 +5,9 @@ const User = require("../models/user");
 const BigPromise = require("../middlewares/bigPromise");
 const CustomError = require("../utils/customError");
 
+// Lib
+const cloudinary = require("cloudinary");
+
 exports.allUsers = BigPromise(async (req, res, next) => {
   const users = await User.find({}).select("-password");
 
@@ -45,5 +48,17 @@ exports.updateSingleUser = BigPromise(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     user: updatedUser,
+  });
+});
+
+exports.deleteSingleUser = BigPromise(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  await cloudinary.v2.uploader.destroy(user.photo.id);
+  await user.remove();
+
+  res.status(200).json({
+    status: "success",
+    message: "user successfully deleted",
   });
 });

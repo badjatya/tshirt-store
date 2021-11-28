@@ -5,6 +5,7 @@ const {
   allUsers,
   singleUser,
   updateSingleUser,
+  deleteSingleUser,
 } = require("../controllers/adminController");
 
 // Middleware
@@ -14,6 +15,7 @@ router.route("/users").get(isLoggedIn, customRole("admin"), allUsers);
 router
   .route("/users/:id")
   .get(isLoggedIn, customRole("admin"), singleUser)
-  .patch(isLoggedIn, customRole("admin"), updateSingleUser);
+  .patch(isLoggedIn, customRole("admin"), updateSingleUser)
+  .delete(isLoggedIn, customRole("admin"), deleteSingleUser);
 
 module.exports = router;
