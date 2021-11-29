@@ -4,6 +4,7 @@ const Product = require("../models/product");
 // Utils
 const BigPromise = require("../middlewares/bigPromise");
 const CustomError = require("../utils/customError");
+const WhereClause = require("../utils/whereClause");
 
 // Lib
 const cloudinary = require("cloudinary");
@@ -69,5 +70,21 @@ exports.addProduct = BigPromise(async (req, res, next) => {
   res.status(201).json({
     status: "success",
     product,
+  });
+});
+
+exports.getAllProducts = BigPromise(async (req, res, next) => {
+  let products = new WhereClause(Product.find(), req.query).search().filter();
+  const totalProducts = await Product.countDocuments();
+  const totalProductPerPage = 6;
+
+  products.pager(totalProductPerPage);
+  products = await products.base;
+
+  res.status(200).json({
+    status: "success",
+    result: products.length,
+    totalProducts,
+    products,
   });
 });

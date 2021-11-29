@@ -26,7 +26,7 @@ class WhereClause {
     delete copyQ["page"];
 
     // Converting object to string
-    const stringCopyQ = JSON.stringify(copyQ);
+    let stringOfCopyQ = JSON.stringify(copyQ);
 
     stringOfCopyQ = stringOfCopyQ.replace(
       /\b(gte|lte|gt|lt)\b/g,
