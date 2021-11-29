@@ -1,11 +1,12 @@
 const router = require("express").Router();
 
 // Controllers
-const {} = require("../controllers/productController");
+const { addProduct } = require("../controllers/productController");
 
 // Middleware
 const { isLoggedIn, customRole } = require("../middlewares/user");
 
-// router.route("/users").get(isLoggedIn, customRole("admin"), allUsers);
+// Admin
+router.route("/add").post(isLoggedIn, customRole("admin"), addProduct);
 
 module.exports = router;
