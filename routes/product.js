@@ -8,6 +8,7 @@ const {
   adminUpdateSingleProductDetails,
   adminDeleteSingleProductDetails,
   addProductReview,
+  deleteProductReview,
 } = require("../controllers/productController");
 
 // Middleware
@@ -17,6 +18,7 @@ const { isLoggedIn, customRole } = require("../middlewares/user");
 router.route("/").get(isLoggedIn, getAllProducts);
 router.route("/:id").get(isLoggedIn, getSingleProduct);
 router.route("/review").post(isLoggedIn, addProductReview);
+router.route("/review/:id").delete(isLoggedIn, deleteProductReview);
 
 // Admin
 router.route("/add").post(isLoggedIn, customRole("admin"), adminAddProduct);

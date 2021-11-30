@@ -200,3 +200,36 @@ exports.addProductReview = BigPromise(async (req, res, next) => {
     message: "Review added successfully",
   });
 });
+
+exports.deleteProductReview = BigPromise(async (req, res, next) => {
+  // Checking product exist or not
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    return next(new CustomError("Product not found", 404));
+  }
+
+  // deleting review
+  product.reviews = product.reviews.filter((review) => {
+    return review.user.toString() !== req.user._id.toString();
+  });
+
+  // Updating numOfReviews
+  product.numberOfReviews = product.reviews.length;
+
+  // Updating Average Rating
+  let totalRating = 0;
+  let totalNumberOfReviews = product.reviews.length;
+  product.reviews.forEach((review) => {
+    totalRating = totalRating + review.rating;
+  });
+  product.ratings =
+    totalRating === 0 ? 0 : Number(totalRating / totalNumberOfReviews);
+
+  // Updating DB
+  await product.save();
+
+  res.status(200).json({
+    status: "success",
+    message: "Review deleted successfully",
+  });
+});

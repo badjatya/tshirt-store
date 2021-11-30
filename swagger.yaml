@@ -1107,3 +1107,34 @@ paths:
           description: Product not found
         500:
           description: internal server error
+
+  /product/review/{id}:
+    delete:
+      tags:
+        - Product
+      summary: User can delete review of a product which he created
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          description: Enter the productId to delete the review of that product that u have created
+          default: 61a50d4655199d36b798dffc
+      responses:
+        200:
+          description: successfully, deleted the review
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+        400:
+          description: bad request
+        404:
+          description: Product not found
+        500:
+          description: internal server error
