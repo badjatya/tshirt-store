@@ -118,3 +118,25 @@ exports.adminUpdateSingleProductDetails = BigPromise(async (req, res, next) => {
     product,
   });
 });
+
+exports.adminDeleteSingleProductDetails = BigPromise(async (req, res, next) => {
+  const product = await Product.findById(req.params.id);
+
+  // Checking the product is available or not
+  if (!product) {
+    return next(new CustomError("Product not found", 404));
+  }
+
+  // Deleting the images of the product stored in cloudinary
+  for (let index = 0; index < product.photos.length; index++) {
+    await cloudinary.v2.uploader.destroy(product.photos[index].id);
+  }
+
+  // Deleting the product from database
+  await product.remove();
+
+  res.json({
+    status: "success",
+    message: "Product removed successfully",
+  });
+});

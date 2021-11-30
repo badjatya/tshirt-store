@@ -1035,3 +1035,33 @@ paths:
           description: product not found, try different product id
         500:
           description: internal server error
+    delete:
+      tags:
+        - Product
+      summary: Admin can delete the product
+      parameters:
+        - name: id
+          required: true
+          in: path
+          default: 61a50d4655199d36b798dffc
+          description: enter the product's id to get the details of single product
+          schema:
+            type: string
+      responses:
+        200:
+          description: success, product deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+        400:
+          description: bad request
+        404:
+          description: product not found, try different product id
+        500:
+          description: internal server error
