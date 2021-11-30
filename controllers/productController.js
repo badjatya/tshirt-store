@@ -15,6 +15,17 @@ exports.addProduct = BigPromise(async (req, res, next) => {
     return next(new CustomError("A product must have photos", 400));
   }
 
+  // Checking all this fields are present
+  const { name, price, description, category, stock, brand } = req.body;
+  if (!(name || price || description || category || stock || brand)) {
+    return next(
+      new CustomError(
+        "Product must have name, price, description, category, stock, brand",
+        400
+      )
+    );
+  }
+
   // Saving Photos
   let imageArray = [];
   // Uploading image based on single image or multiple image
@@ -44,16 +55,6 @@ exports.addProduct = BigPromise(async (req, res, next) => {
       id: result.public_id,
       secureUrl: result.secure_url,
     });
-  }
-
-  // Checking all this fields are present
-  const { name, price, description, category, stock, brand } = req.body;
-  if (!(name || price || description || category || stock || brand)) {
-    return next(
-      new CustomError(
-        "Product must have name, price, description, category, stock, brand"
-      )
-    );
   }
 
   const product = await Product.create({
