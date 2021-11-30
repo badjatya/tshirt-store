@@ -1138,3 +1138,45 @@ paths:
           description: Product not found
         500:
           description: internal server error
+    get:
+      tags:
+        - Product
+      summary: returns a list of reviews of a single product base don productId
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          description: Enter the productId to get the review of a product
+          default: 61a50d4655199d36b798dffc
+      responses:
+        200:
+          description: successfully, review list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  reviews:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                        user:
+                          type: string
+                        name:
+                          type: string
+                        rating:
+                          type: number
+                        comment:
+                          type: string
+        400:
+          description: bad request
+        404:
+          description: Product not found
+        500:
+          description: internal server error

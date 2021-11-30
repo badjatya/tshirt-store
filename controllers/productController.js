@@ -233,3 +233,16 @@ exports.deleteProductReview = BigPromise(async (req, res, next) => {
     message: "Review deleted successfully",
   });
 });
+
+exports.getAllProductReviews = BigPromise(async (req, res, next) => {
+  // Checking product exist or not
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    return next(new CustomError("Product not found", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    reviews: product.reviews,
+  });
+});
