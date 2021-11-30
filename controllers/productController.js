@@ -9,7 +9,7 @@ const WhereClause = require("../utils/whereClause");
 // Lib
 const cloudinary = require("cloudinary");
 
-exports.addProduct = BigPromise(async (req, res, next) => {
+exports.adminAddProduct = BigPromise(async (req, res, next) => {
   // checking the images are present or not
   if (!req.files) {
     return next(new CustomError("A product must have photos", 400));
@@ -92,6 +92,22 @@ exports.getAllProducts = BigPromise(async (req, res, next) => {
 
 exports.getSingleProduct = BigPromise(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
+
+  if (!product) {
+    return next(new CustomError("Product not found", 404));
+  }
+
+  res.json({
+    status: "success",
+    product,
+  });
+});
+
+exports.adminUpdateSingleProductDetails = BigPromise(async (req, res, next) => {
+  const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   if (!product) {
     return next(new CustomError("Product not found", 404));

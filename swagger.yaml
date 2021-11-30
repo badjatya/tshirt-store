@@ -936,3 +936,102 @@ paths:
           description: product not found, try different product id
         500:
           description: internal server error
+    patch:
+      tags:
+        - Product
+      summary: Admin can update the product details except images
+      parameters:
+        - name: id
+          required: true
+          in: path
+          default: 61a50d4655199d36b798dffc
+          description: Enter the product's id to get the details of single product
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Product name should not be more than 120 characters
+                price:
+                  type: number
+                  description: price of product cant be more than 6 digits
+                description:
+                  type: string
+                  description: Provide a description of the product
+                category:
+                  type: string
+                  enum:
+                    - shortSleeves
+                    - longSleeves
+                    - sweatShirt
+                    - hoodie
+                  description: please select from category ONLY
+                stock:
+                  type: number
+                  description: Enter the amount of quantity available
+                brand:
+                  type: string
+                  description: select the brand of the product
+                  enum:
+                    - LCO
+                    - Archit
+                    - Badjatya
+      responses:
+        200:
+          description: success, return the object containing the product details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  product:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      name:
+                        type: string
+                      price:
+                        type: number
+                      description:
+                        type: string
+                      category:
+                        type: string
+                      stock:
+                        type: number
+                      brand:
+                        type: string
+                      ratings:
+                        type: number
+                      numberOfReviews:
+                        type: number
+                      user:
+                        type: string
+                      reviews:
+                        type: array
+                      photos:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            secureUrl:
+                              type: string
+                      createdAt:
+                        type: string
+                      __v:
+                        type: string
+        400:
+          description: bad request
+        404:
+          description: product not found, try different product id
+        500:
+          description: internal server error
