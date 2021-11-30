@@ -4,13 +4,17 @@ const router = require("express").Router();
 const {
   addProduct,
   getAllProducts,
+  getSingleProduct,
 } = require("../controllers/productController");
 
 // Middleware
 const { isLoggedIn, customRole } = require("../middlewares/user");
 
+// User
+router.route("/").get(isLoggedIn, getAllProducts);
+router.route("/:id").get(isLoggedIn, getSingleProduct);
+
 // Admin
 router.route("/add").post(isLoggedIn, customRole("admin"), addProduct);
-router.route("/").get(isLoggedIn, getAllProducts);
 
 module.exports = router;
