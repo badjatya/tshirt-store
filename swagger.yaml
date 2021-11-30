@@ -778,3 +778,93 @@ paths:
           description: name, price, description, category, brand and photos are required also admin should be login
         500:
           description: Internal server error
+
+  /product:
+    get:
+      tags:
+        - Product
+      summary: returns a list of products, a logged in user can view
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: user can search a product by the name of the product
+        - name: price
+          schema:
+            type: string
+          in: query
+          description: In frontend or postman u can use price[gt]=100 (gt,gte,lt,lte) here u can only price=500
+        - name: ratings
+          schema:
+            type: string
+          in: query
+          description: In frontend or postman u can use rating[gt]=3.0 (gt,gte,lt,lte) here u can only rating=4.0
+        - name: limit
+          schema:
+            type: string
+          in: query
+          description: user can limit the number of products shown in per page
+        - name: page
+          schema:
+            type: string
+          in: query
+          description: user can view different page
+      responses:
+        200:
+          description: returns an array of products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  result:
+                    type: number
+                  totalProducts:
+                    type: number
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                        name:
+                          type: string
+                        price:
+                          type: number
+                        description:
+                          type: string
+                        category:
+                          type: string
+                        stock:
+                          type: number
+                        brand:
+                          type: string
+                        ratings:
+                          type: number
+                        numberOfReviews:
+                          type: number
+                        user:
+                          type: string
+                        reviews:
+                          type: array
+                        photos:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              secureUrl:
+                                type: string
+                        createdAt:
+                          type: string
+                        __v:
+                          type: string
+        400:
+          description: bad request
+        500:
+          description: internal server error
