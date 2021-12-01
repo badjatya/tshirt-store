@@ -4,7 +4,7 @@
   "description": "A backend REST API's project for a t-shirt store",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
+    "start": "node index.js",
     "dev": "nodemon index -e js,json,yaml,ejs"
   },
   "repository": {
