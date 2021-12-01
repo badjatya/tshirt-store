@@ -31,6 +31,7 @@ app.use("/api/v1", require("./routes/home"));
 app.use("/api/v1/users", require("./routes/user"));
 app.use("/api/v1/admin", require("./routes/admin"));
 app.use("/api/v1/product", require("./routes/product"));
+app.use("/api/v1/order", require("./routes/order"));
 
 // Exporting app
 module.exports = app;
