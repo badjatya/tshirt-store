@@ -1180,3 +1180,168 @@ paths:
           description: Product not found
         500:
           description: internal server error
+
+  /order/create:
+    post:
+      tags:
+        - Order
+      summary: Creates a new order of a product, requires shippingInfo, orderItems, paymentInfo, taxAmount, shippingAmount and totalAmount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - shippingInfo
+                - orderItems
+                - paymentInfo
+                - taxAmount
+                - shippingAmount
+                - totalAmount
+              properties:
+                shippingInfo:
+                  type: object
+                  description: Enter the details of shipping
+                  required:
+                    - address
+                    - phoneNumber
+                    - city
+                    - state
+                    - country
+                    - postalCode
+                  properties:
+                    address:
+                      type: string
+                      description: Enter the user address where product should be delivered
+                      example: Treasure island
+                    phoneNumber:
+                      type: number
+                      description: Enter the mobile number
+                      example: 9898989898
+                    city:
+                      type: string
+                      description: Enter the user's city
+                      example: Indore
+                    state:
+                      type: string
+                      description: Enter the state of the user
+                      example: Madhya Pradesh
+                    country:
+                      type: string
+                      description: Enter the user's country
+                      example: India
+                    postalCode:
+                      type: number
+                      description: Enter the user's postal code or zip code or pin code
+                      example: 452001
+                orderItems:
+                  type: array
+                  description: Enter the list of products that user is ordering
+                  items:
+                    type: object
+                    required:
+                      - productName
+                      - quantity
+                      - image
+                      - price
+                      - product
+                    properties:
+                      productName:
+                        type: string
+                        description: Enter the name of the product user ordering
+                        example: Pro Coder T-Shirt
+                      quantity:
+                        type: number
+                        description: Enter the quantity of the product user ordering
+                        example: 2
+                      image:
+                        type: string
+                        description: Enter the image of the product
+                        example: https://res.cloudinary.com/badjatya/image/upload/v1638206903/lco/t-shirtStore/products/ciky8m2yti3xfpjha6ls.jpg
+                      price:
+                        type: string
+                        description: Enter the price of the product (price=299*quantity)
+                        example: 1998
+                      product:
+                        type: string
+                        description: Enter the Id of the product
+                        example: 61a50dc455199d36b798e00a
+                paymentInfo:
+                  type: object
+                  required:
+                    - id
+                  properties:
+                    id:
+                      type: string
+                      description: Enter the id received after payment
+                      example: test id
+                taxAmount:
+                  type: number
+                  description: enter the total tax amount
+                  example: 50
+                shippingAmount:
+                  type: number
+                  description: enter the total shipping charge
+                  example: 100
+                totalAmount:
+                  type: number
+                  description: enter the total amount
+                  example: 2248
+      responses:
+        201:
+          description: success, order created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  order:
+                    type: object
+                    properties:
+                      shippingInfo:
+                        type: object
+                        properties:
+                          address:
+                            type: string
+                          phoneNumber:
+                            type: number
+                          city:
+                            type: string
+                          state:
+                            type: string
+                          country:
+                            type: string
+                          postalCode:
+                            type: number
+                      orderItems:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            productName:
+                              type: string
+                            quantity:
+                              type: number
+                            image:
+                              type: string
+                            price:
+                              type: string
+                            product:
+                              type: string
+                      paymentInfo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                      taxAmount:
+                        type: number
+                      shippingAmount:
+                        type: number
+                      totalAmount:
+                        type: number
+        400:
+          description: Bad request, An order must contain shippingInfo, orderItems, paymentInfo, taxAmount, shippingAmount and totalAmount
+        500:
+          description: internal server error

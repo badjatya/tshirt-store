@@ -59,6 +59,7 @@ exports.getAllOrdersOfLoggedInUser = BigPromise(async (req, res, next) => {
       name: req.user.name,
       email: req.user.email,
     },
+    totalOrder: orders.length,
     orders,
   });
 });
