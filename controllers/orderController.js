@@ -50,6 +50,19 @@ exports.createOrder = BigPromise(async (req, res, next) => {
   });
 });
 
+exports.getAllOrdersOfLoggedInUser = BigPromise(async (req, res, next) => {
+  const orders = await Order.find({ user: req.user._id });
+
+  res.status(200).json({
+    status: "success",
+    user: {
+      name: req.user.name,
+      email: req.user.email,
+    },
+    orders,
+  });
+});
+
 exports.getSingleOrder = BigPromise(async (req, res, next) => {
   const order = await Order.findById(req.params.id).populate(
     "user",
