@@ -65,10 +65,15 @@ exports.getAllOrdersOfLoggedInUser = BigPromise(async (req, res, next) => {
 });
 
 exports.getSingleOrder = BigPromise(async (req, res, next) => {
-  const order = await Order.findById(req.params.id).populate(
-    "user",
-    "name email role"
-  );
+  // const order = await Order.findById(req.params.id).populate(
+  //     "user",
+  //     "name email role"
+  //   );
+
+  const order = await Order.findOne({
+    _id: req.params.id,
+    user: req.user._id,
+  }).populate("user", "name email role");
 
   if (!order) {
     return next(new CustomError("Order not found", 404));
@@ -77,5 +82,19 @@ exports.getSingleOrder = BigPromise(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     order,
+  });
+});
+
+exports.adminGetAllOrders = BigPromise(async (req, res, next) => {
+  const orders = await Order.find();
+
+  res.status(200).json({
+    status: "success",
+    user: {
+      name: req.user.name,
+      email: req.user.email,
+    },
+    totalOrder: orders.length,
+    orders,
   });
 });
