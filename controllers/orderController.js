@@ -49,3 +49,19 @@ exports.createOrder = BigPromise(async (req, res, next) => {
     order,
   });
 });
+
+exports.getSingleOrder = BigPromise(async (req, res, next) => {
+  const order = await Order.findById(req.params.id).populate(
+    "user",
+    "name email role"
+  );
+
+  if (!order) {
+    return next(new CustomError("Order not found", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    order,
+  });
+});
