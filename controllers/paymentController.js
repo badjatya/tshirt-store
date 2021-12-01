@@ -25,13 +25,14 @@ exports.captureStripePayment = BigPromise(async (req, res, next) => {
   res.json({
     status: "success",
     clientSecret: paymentIntent.client_secret,
+    amount: req.body.amount / 100,
   });
 });
 
-exports.getSRazorpayKey = BigPromise(async (req, res, next) => {
+exports.getRazorpayKey = BigPromise(async (req, res, next) => {
   res.json({
     status: "success",
-    stripeApi_keys: process.env.RAZORPAY_API_KEY,
+    razorpayApi_keys: process.env.RAZORPAY_API_KEY,
   });
 });
 
@@ -49,7 +50,7 @@ exports.captureRazorpayPayment = BigPromise(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    amount: req.body.amount,
+    amount: req.body.amount / 100,
     order: myOrder,
   });
 });

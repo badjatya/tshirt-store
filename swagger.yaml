@@ -1665,3 +1665,146 @@ paths:
           description: Order not found
         500:
           description: internal server error
+
+  /payment/stripeKey:
+    get:
+      tags:
+        - Payment
+      summary: returns an object with stripe public apiKey
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  stripeApi_keys:
+                    type: string
+        400:
+          description: bad request
+        500:
+          description: internal server error
+
+  /payment/razorpayKey:
+    get:
+      tags:
+        - Payment
+      summary: returns an object with razorpay public apiKey
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  razorpayApi_keys:
+                    type: string
+        400:
+          description: bad request
+        500:
+          description: internal server error
+
+  /payment/captureStripe:
+    post:
+      tags:
+        - Payment
+      summary: the payment can only be done using frontend, requires amount in (5rs 500)
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - amount
+              properties:
+                amount:
+                  type: number
+                  required: true
+                  description: 5rs amount will be entered as 500 amount=500 for 5rs
+                  example: 500
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  clientSecret:
+                    type: string
+                  amount:
+                    type: number
+        400:
+          description: bad request
+        500:
+          description: internal server error
+
+  /payment/captureRazorpay:
+    post:
+      tags:
+        - Payment
+      summary: the payment can only be done using frontend, requires amount in (5rs 500)
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - amount
+              properties:
+                amount:
+                  type: number
+                  required: true
+                  description: 5rs amount will be entered as 500 amount=500 for 5rs
+                  example: 500
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  amount:
+                    type: number
+                  order:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      entity:
+                        type: string
+                      amount:
+                        type: number
+                      amount_paid:
+                        type: number
+                      amount_due:
+                        type: number
+                      currency:
+                        type: string
+                      receipt:
+                        type: string
+                      offer_id:
+                        type: string
+                      status:
+                        type: string
+                      attempts:
+                        type: number
+                      notes:
+                        type: array
+                      createdAt:
+                        type: number
+        400:
+          description: bad request
+        500:
+          description: internal server error
