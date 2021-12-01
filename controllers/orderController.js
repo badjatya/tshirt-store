@@ -95,3 +95,28 @@ exports.adminGetAllOrders = BigPromise(async (req, res, next) => {
     orders,
   });
 });
+
+exports.adminUpdatingOrder = BigPromise(async (req, res, next) => {
+  const order = await Order.findById(req.params.id);
+
+  // Restricting to not update the order again
+  if (order.orderStatus === "Delivered") {
+    return next(new CustomError("Order Can't be updated", 401));
+  }
+
+  // Updating the products stock by reducing the quantity
+  order.orderItems.map(async (orderItem) => {
+    const product = await Product.findById(orderItem.product);
+    product.stock = product.stock - orderItem.quantity;
+    await product.save();
+  });
+
+  // Updating the order status
+  order.orderStatus = req.body.orderStatus;
+  await order.save();
+
+  res.status(200).json({
+    status: "success",
+    message: "Updated order",
+  });
+});

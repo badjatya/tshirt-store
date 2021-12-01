@@ -1448,6 +1448,13 @@ paths:
       tags:
         - Order
       summary: get details of an order based on orderId if the logged in user have created the order only than he will get the order
+      parameters:
+        - name: id
+          required: true
+          in: path
+          default: 61a762c48296832e8eb43aa6
+          schema:
+            type: string
       responses:
         200:
           description: success, user can view his order
@@ -1607,5 +1614,47 @@ paths:
                           type: string
         400:
           description: bad request
+        500:
+          description: internal server error
+
+  /order/admin/orders/{id}:
+    patch:
+      tags:
+        - Order
+      summary: Admin can update the orderStatus to Delivered, once marked delivered u can not reverse it
+      parameters:
+        - name: id
+          required: true
+          in: path
+          default: 61a7a75c6c4cae69f52354f1
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - orderStatus
+              properties:
+                orderStatus:
+                  type: string
+                  example: Delivered
+      responses:
+        200:
+          description: success, order updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+        400:
+          description: bad request
+        401:
+          description: Order Can't be updated again
         500:
           description: internal server error
