@@ -26,6 +26,9 @@ app.use(
 );
 app.use(morgan("tiny"));
 
+// Template Engine
+app.set("view engine", "ejs");
+
 // ** Routes
 app.use("/", require("./routes/home"));
 app.use("/api/v1/users", require("./routes/user"));
