@@ -86,14 +86,11 @@ exports.getSingleOrder = BigPromise(async (req, res, next) => {
 });
 
 exports.adminGetAllOrders = BigPromise(async (req, res, next) => {
-  const orders = await Order.find();
+  // admin getting all orders but newest first
+  const orders = await Order.find().sort("-createdAt");
 
   res.status(200).json({
     status: "success",
-    user: {
-      name: req.user.name,
-      email: req.user.email,
-    },
     totalOrder: orders.length,
     orders,
   });
