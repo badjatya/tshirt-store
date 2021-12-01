@@ -7,6 +7,7 @@ const {
   getAllOrdersOfLoggedInUser,
   adminGetAllOrders,
   adminUpdatingOrder,
+  adminDeleteOrder,
 } = require("../controllers/orderController");
 
 // Middleware
@@ -23,6 +24,7 @@ router
   .get(isLoggedIn, customRole("admin"), adminGetAllOrders);
 router
   .route("/admin/orders/:id")
-  .patch(isLoggedIn, customRole("admin"), adminUpdatingOrder);
+  .patch(isLoggedIn, customRole("admin"), adminUpdatingOrder)
+  .delete(isLoggedIn, customRole("admin"), adminDeleteOrder);
 
 module.exports = router;

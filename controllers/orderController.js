@@ -120,3 +120,16 @@ exports.adminUpdatingOrder = BigPromise(async (req, res, next) => {
     message: "Updated order",
   });
 });
+
+exports.adminDeleteOrder = BigPromise(async (req, res, next) => {
+  const order = await Order.findByIdAndDelete(req.params.id);
+
+  if (!order) {
+    return next(new CustomError("Order not found", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "Deleted order",
+  });
+});
