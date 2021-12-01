@@ -39,28 +39,6 @@ components:
       scheme: bearer
 
 paths:
-  /dummy:
-    get:
-      tags:
-        - Home
-      summary: A basic home route for greeting
-      responses:
-        200:
-          description: All good success
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  greeting:
-                    type: string
-                  dummy:
-                    type: boolean
-        500:
-          description: Internal server error
-
   /users/signup:
     post:
       tags:

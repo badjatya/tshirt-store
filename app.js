@@ -27,7 +27,7 @@ app.use(
 app.use(morgan("tiny"));
 
 // ** Routes
-app.use("/api/v1", require("./routes/home"));
+app.use("/", require("./routes/home"));
 app.use("/api/v1/users", require("./routes/user"));
 app.use("/api/v1/admin", require("./routes/admin"));
 app.use("/api/v1/product", require("./routes/product"));
