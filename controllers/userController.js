@@ -15,11 +15,11 @@ exports.signup = BigPromise(async (req, res, next) => {
   const { name, email, password } = req.body;
 
   if (!req.files) {
-    return next(CustomError("photo is required for signup", 400));
+    return next(new CustomError("photo is required for signup", 400));
   }
 
   if (!name || !email || !password) {
-    return next(CustomError("Name, email, password are required", 400));
+    return next(new CustomError("Name, email, password are required", 400));
   }
 
   const file = req.files.photo;

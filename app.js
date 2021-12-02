@@ -8,7 +8,7 @@ const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
-const morgan = require("morgan");
+// const morgan = require("morgan");
 
 // Swagger API Documentation
 const swaggerDocument = YAML.load("./swagger.yaml");
@@ -24,7 +24,7 @@ app.use(
     tempFileDir: "/tmp/",
   })
 );
-app.use(morgan("tiny"));
+// app.use(morgan("tiny"));
 
 // Template Engine
 app.set("view engine", "ejs");
