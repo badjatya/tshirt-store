@@ -10,6 +10,7 @@ info:
 servers:
   - url: "{protocol}://localhost:{port}/api/{version}"
     description: A local host server of the API
+  - url: "https://tshirt-store-node.herokuapp.com/api/{version}"
     variables:
       protocol:
         enum:
